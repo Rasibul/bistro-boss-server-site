@@ -32,18 +32,23 @@ async function run() {
         const reviewCollection = client.db("bistroDB").collection("reviews")
         const cartsCollection = client.db("bistroDB").collection("carts")
 
-        app.get('/api/v1/menus',async(req,res)=>{
+        app.get('/api/v1/menus', async (req, res) => {
             const result = await menuCollection.find().toArray()
             res.send(result)
         })
-        
-        app.get('/api/v1/reviews',async(req,res)=>{
+
+        app.get('/api/v1/reviews', async (req, res) => {
             const result = await reviewCollection.find().toArray()
             res.send(result)
         })
         // carts collection
 
-        app.post('/api/v1/carts',async(req,res)=>{
+        app.get('/api/v1/carts', async (req, res) => {
+            const result = await cartsCollection.find().toArray()
+            res.send(result)
+        })
+
+        app.post('/api/v1/carts', async (req, res) => {
             const cartItem = req.body
             const result = await cartsCollection.insertOne(cartItem)
             res.send(result)
