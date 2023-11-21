@@ -28,9 +28,18 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         // await client.connect();
 
+        const userCollection = client.db("bistroDB").collection("users")
         const menuCollection = client.db("bistroDB").collection("menus")
         const reviewCollection = client.db("bistroDB").collection("reviews")
         const cartsCollection = client.db("bistroDB").collection("carts")
+
+        // userCollection
+
+        app.post('/api/v1/users',async(req,res)=>{
+            const user = req.body
+            const result = await userCollection.insertOne(user)
+            res.send(result)
+        })
 
         app.get('/api/v1/menus', async (req, res) => {
             const result = await menuCollection.find().toArray()
@@ -62,8 +71,6 @@ async function run() {
             const result = await cartsCollection.deleteOne(query)
             res.send(result)
         })
-
-
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
