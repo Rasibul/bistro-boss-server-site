@@ -35,8 +35,18 @@ async function run() {
 
         // userCollection
 
-        app.post('/api/v1/users',async(req,res)=>{
+        app.get('/api/v1/users', async (req, res) => {
+            const result = await userCollection.find().toArray()
+            res.send(result)
+        })
+        
+        app.post('/api/v1/users', async (req, res) => {
             const user = req.body
+            const query = { email: user.email }
+            const existingUser = await userCollection.findOne(query)
+            if (existingUser) {
+                return res.send({ message: 'user alredy axist', insertedId: null })
+            }
             const result = await userCollection.insertOne(user)
             res.send(result)
         })
@@ -54,7 +64,7 @@ async function run() {
 
         app.get('/api/v1/carts', async (req, res) => {
             const email = req.query.email
-            const query = {email:email}
+            const query = { email: email }
             const result = await cartsCollection.find(query).toArray()
             res.send(result)
         })
@@ -65,9 +75,9 @@ async function run() {
             res.send(result)
         })
 
-        app.delete('/api/v1/carts/:id',async(req,res) =>{
+        app.delete('/api/v1/carts/:id', async (req, res) => {
             const id = req.params.id
-            const query = {_id: new ObjectId(id)}
+            const query = { _id: new ObjectId(id) }
             const result = await cartsCollection.deleteOne(query)
             res.send(result)
         })
